@@ -3,8 +3,6 @@ pipeline {
 stage 'Dev'
 node ('docker-cloud') {
     checkout scm
-    mvn 'clean package'
-    dir('target') {stash name: 'war', includes: 'x.war'}
 }
 
 stage 'QA'
@@ -33,22 +31,11 @@ node ('docker-cloud'){
     echo "Deployed to production"
 }
 
-def mvn(args) {
-    sh "${tool 'Maven 3.x'}/bin/mvn ${args}"
-}
 
 def runTests(duration) {
     node {
         sh "sleep ${duration}"
         }
     }
-
-def deploy(id) {
-    unstash 'war'
-    sh "cp x.war /tmp/${id}.war"
-}
-
-def undeploy(id) {
-    sh "rm /tmp/${id}.war"
-}
-}
+    
+ }
